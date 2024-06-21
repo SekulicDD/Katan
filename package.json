@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "ngx-socket-io": "^4.7.0",
+    "pixi.js": "^8.2.0"
+  }
+}
