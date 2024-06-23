@@ -1,0 +1,10 @@
+* {
+  overflow-y: hidden !important;
+  overflow-x: hidden !important;
+}
+
+#game-container {
+  position: relative;
+  transition: transform 0.5s ease;
+  transform-origin: top left;
+}
