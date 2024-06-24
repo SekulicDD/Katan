@@ -52,6 +52,7 @@ export class GameRenderService {
     this.app.stage.addChild(this.bg);
 
     this.app.stage.addChild(this.boardContainer);
+
     await this.loadAssets();
 
     this.div = div;
@@ -61,12 +62,7 @@ export class GameRenderService {
 
   private createPanableBg() {
     this.bg = new Graphics();
-    this.bg.rect(
-      -800,
-      -300,
-      this.app.renderer.width + 1600,
-      this.app.renderer.height + 600
-    );
+    this.bg.rect(0, 0, this.app.renderer.width, this.app.renderer.height);
     this.bg.fill('#1F2937');
     this.bg.interactive = true;
     this.bg.on('pointerdown', this.onDragStart.bind(this));
@@ -77,12 +73,19 @@ export class GameRenderService {
 
   private async loadAssets(): Promise<any> {
     Assets.add({ alias: 'woodTexture', src: 'images/wood-texture1.png' });
+
     Assets.add({ alias: 'brickField', src: 'images/brick-field.png' });
     Assets.add({ alias: 'desertField', src: 'images/desert-field.png' });
     Assets.add({ alias: 'forestField', src: 'images/forest-field.png' });
     Assets.add({ alias: 'rockField', src: 'images/rock-field.png' });
     Assets.add({ alias: 'sheepField', src: 'images/sheep-field.png' });
     Assets.add({ alias: 'wheatField', src: 'images/wheat-field.png' });
+
+    Assets.add({ alias: 'brickCard', src: 'images/brick-card.jpg' });
+    Assets.add({ alias: 'woodCard', src: 'images/wood-card.jpg' });
+    Assets.add({ alias: 'oreCard', src: 'images/ore-card.jpg' });
+    Assets.add({ alias: 'sheepCard', src: 'images/sheep-card.jpg' });
+    Assets.add({ alias: 'wheatCard', src: 'images/wheat-card.jpg' });
     this.textures = await Assets.load([
       'brickField',
       'desertField',
@@ -91,6 +94,11 @@ export class GameRenderService {
       'sheepField',
       'wheatField',
       'woodTexture',
+      'brickCard',
+      'woodCard',
+      'oreCard',
+      'sheepCard',
+      'wheatCard',
     ]);
   }
 
@@ -116,14 +124,15 @@ export class GameRenderService {
     this.scale *= zoom;
     this.scale = Math.max(1, Math.min(this.scale, 1.35));
 
-    this.app.stage.scale.set(this.scale);
+    this.boardContainer.scale.set(this.scale);
 
-    const mouseOffsetX = (event.x - this.app.stage.x) / oldScale;
-    const mouseOffsetY = (event.y - this.app.stage.y) / oldScale;
+    const mouseOffsetX = (event.x - this.boardContainer.x) / oldScale;
+    const mouseOffsetY = (event.y - this.boardContainer.y) / oldScale;
 
-    this.app.stage.scale.set(this.scale);
-    this.app.stage.x -= mouseOffsetX * (this.scale - oldScale);
-    this.app.stage.y -= mouseOffsetY * (this.scale - oldScale);
+    this.boardContainer.scale.set(this.scale);
+    this.boardContainer.x -= mouseOffsetX * (this.scale - oldScale);
+    this.boardContainer.y -= mouseOffsetY * (this.scale - oldScale);
+    this.repositionBoard();
   }
 
   onDragStart = (event: any) => {
@@ -139,19 +148,42 @@ export class GameRenderService {
 
   onDragMove = (event: any) => {
     if (this.isDragging) {
-      const newPosition = event.data.global;
-      const deltaX = newPosition.x - this.previousX;
-      const deltaY = newPosition.y - this.previousY;
-
-      if (this.app.stage.x + deltaX > -800 && this.app.stage.x + deltaX < 800) {
-        this.app.stage.x += deltaX;
-      }
-      if (this.app.stage.y + deltaY > -300 && this.app.stage.y + deltaY < 300) {
-        this.app.stage.y += deltaY;
-      }
-
-      this.previousX = newPosition.x;
-      this.previousY = newPosition.y;
+      const { x, y } = event.data.global;
+      this.moveBoard(x - this.previousX, y - this.previousY);
+      this.previousX = x;
+      this.previousY = y;
     }
   };
+
+  private moveBoard(deltaX: number, deltaY: number) {
+    const { newX, newY } = this.calculateNewPosition(deltaX, deltaY);
+    this.boardContainer.x = newX;
+    this.boardContainer.y = newY;
+  }
+
+  private calculateNewPosition(deltaX: number, deltaY: number) {
+    const newX = this.clamp(
+      this.boardContainer.x + deltaX,
+      0,
+      this.div.clientWidth - this.boardContainer.width - 40
+    );
+    const newY = this.clamp(
+      this.boardContainer.y + deltaY,
+      this.boardContainer.height / 4,
+      this.div.clientHeight + 40 - this.boardContainer.height
+    );
+
+    return { newX, newY };
+  }
+
+  private repositionBoard() {
+    const { newX, newY } = this.calculateNewPosition(0, 0);
+
+    this.boardContainer.x = newX;
+    this.boardContainer.y = newY;
+  }
+
+  private clamp(value: number, min: number, max: number): number {
+    return Math.max(min, Math.min(max, value));
+  }
 }

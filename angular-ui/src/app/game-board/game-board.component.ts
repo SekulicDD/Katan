@@ -26,7 +26,7 @@ export class GameBoardComponent implements OnInit {
   ngOnInit(): void {
     this.boardContainer.x = this.app.screen.width / 3;
     this.boardContainer.y = this.app.screen.height / 4;
-    this.drawCatanBoard(154, 154);
+    this.drawCatanBoard(144, 144);
   }
 
   private drawCatanBoard(width: number, height: number) {
