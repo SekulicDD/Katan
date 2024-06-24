@@ -1,7 +1,7 @@
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { GameRenderService } from '../services/game-render.service';
 import { Application } from 'pixi.js';
-import { GameBoardComponent } from '../game-board/game-board.component';
+import { GameBoardComponent } from './game-board/game-board.component';
 import { CommonModule } from '@angular/common';
 
 @Component({

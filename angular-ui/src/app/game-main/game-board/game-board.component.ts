@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GameRenderService } from '../services/game-render.service';
+import { GameRenderService } from '../../services/game-render.service';
 import {
   Application,
   Color,
