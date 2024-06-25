@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Application, Container } from 'pixi.js';
-
+import { gsap } from 'gsap';
+import { PixiPlugin } from 'gsap/PixiPlugin';
 @Injectable({
   providedIn: 'root',
 })
@@ -13,7 +14,10 @@ export class BoardRenderService {
   private previousX: number = 0;
   private previousY: number = 0;
 
-  constructor(private app: Application) {}
+  constructor(private app: Application) {
+    gsap.registerPlugin(PixiPlugin);
+    PixiPlugin.registerPIXI(app);
+  }
 
   init(div: HTMLElement) {
     this.div = div;
@@ -45,15 +49,21 @@ export class BoardRenderService {
     this.scale *= zoom;
     this.scale = Math.max(1, Math.min(this.scale, 1.35));
 
-    this.boardContainer.scale.set(this.scale);
-
     const mouseOffsetX = (event.x - this.boardContainer.x) / oldScale;
     const mouseOffsetY = (event.y - this.boardContainer.y) / oldScale;
 
-    this.boardContainer.scale.set(this.scale);
-    this.boardContainer.x -= mouseOffsetX * (this.scale - oldScale);
-    this.boardContainer.y -= mouseOffsetY * (this.scale - oldScale);
-    this.repositionBoard();
+    gsap.to(this.boardContainer, {
+      duration: 0.5,
+      ease: 'power2.out',
+      pixi: {
+        scale: this.scale,
+        x: this.boardContainer.x - mouseOffsetX * (this.scale - oldScale),
+        y: this.boardContainer.y - mouseOffsetY * (this.scale - oldScale),
+      },
+      onUpdate: () => {
+        this.repositionBoard();
+      },
+    });
   }
 
   onDragStart = (event: any) => {
@@ -77,9 +87,19 @@ export class BoardRenderService {
   };
 
   private moveBoard(deltaX: number, deltaY: number) {
-    const { newX, newY } = this.calculateNewPosition(deltaX, deltaY);
-    this.boardContainer.x = newX;
-    this.boardContainer.y = newY;
+    const speed = 18;
+    const { newX, newY } = this.calculateNewPosition(
+      deltaX * speed,
+      deltaY * speed
+    );
+    gsap.to(this.boardContainer, {
+      duration: 1,
+      ease: 'power3.out',
+      pixi: {
+        x: newX,
+        y: newY,
+      },
+    });
   }
 
   private calculateNewPosition(deltaX: number, deltaY: number) {
