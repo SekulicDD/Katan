@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GameRenderService } from '../../services/game-render.service';
+
 import {
   Application,
   Color,
@@ -8,6 +8,7 @@ import {
   Rectangle,
   Sprite,
 } from 'pixi.js';
+import { GameRenderService } from '../../../services/game-render.service';
 
 @Component({
   selector: 'app-game-board',
@@ -26,10 +27,10 @@ export class GameBoardComponent implements OnInit {
   ngOnInit(): void {
     this.boardContainer.x = this.app.screen.width / 3;
     this.boardContainer.y = this.app.screen.height / 4;
-    this.drawCatanBoard(144, 144);
+    this.drawBoard(144, 144);
   }
 
-  private drawCatanBoard(width: number, height: number) {
+  private drawBoard(width: number, height: number) {
     const hexWidth = width * 0.87;
     const hexHeight = height;
 

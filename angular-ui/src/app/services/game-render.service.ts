@@ -8,19 +8,22 @@ import {
   Texture,
 } from 'pixi.js';
 import { BoardRenderService } from './board-render.service';
+import { UiRenderService } from './ui-render.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GameRenderService {
   private app: Application = new Application();
-  private uiContainer: Container = new Container();
   private textures: Record<string, Texture> = {};
-  private boardService!: BoardRenderService;
   private bg!: Graphics;
 
+  private boardRenderService!: BoardRenderService;
+  private uiRenderService!: UiRenderService;
+
   constructor() {
-    this.boardService = new BoardRenderService(this.app);
+    this.boardRenderService = new BoardRenderService(this.app);
+    this.uiRenderService = new UiRenderService(this.app);
   }
 
   getApp(): Application {
@@ -28,7 +31,11 @@ export class GameRenderService {
   }
 
   getBoardContainer(): Container {
-    return this.boardService.getBoardContainer();
+    return this.boardRenderService.getBoardContainer();
+  }
+
+  getUiContainer(): Container {
+    return this.uiRenderService.getUiContainer();
   }
 
   getTextures(): Record<string, Texture> {
@@ -46,8 +53,8 @@ export class GameRenderService {
     this.createPanableBg();
     this.app.stage.addChild(this.bg);
 
-    this.boardService.init(div);
-    this.app.stage.addChild(this.uiContainer);
+    this.boardRenderService.init(div);
+    this.uiRenderService.init(div);
 
     await this.loadAssets();
 
@@ -61,19 +68,19 @@ export class GameRenderService {
     this.bg.interactive = true;
     this.bg.on(
       'pointerdown',
-      this.boardService.onDragStart.bind(this.boardService)
+      this.boardRenderService.onDragStart.bind(this.boardRenderService)
     );
     this.bg.on(
       'pointermove',
-      this.boardService.onDragMove.bind(this.boardService)
+      this.boardRenderService.onDragMove.bind(this.boardRenderService)
     );
     this.bg.on(
       'pointerup',
-      this.boardService.onDragEnd.bind(this.boardService)
+      this.boardRenderService.onDragEnd.bind(this.boardRenderService)
     );
     this.bg.on(
       'pointerupoutside',
-      this.boardService.onDragEnd.bind(this.boardService)
+      this.boardRenderService.onDragEnd.bind(this.boardRenderService)
     );
   }
 
@@ -110,11 +117,11 @@ export class GameRenderService {
 
   @HostListener('window:resize', ['$event'])
   onResize(event?: Event) {
-    this.boardService.onResize();
+    this.boardRenderService.onResize();
   }
 
   @HostListener('wheel', ['$event'])
   onZoom(event: WheelEvent) {
-    this.boardService.onZoom(event);
+    this.boardRenderService.onZoom(event);
   }
 }
