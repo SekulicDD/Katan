@@ -21,7 +21,7 @@ export class BoardRenderService {
 
   init(div: HTMLElement) {
     this.div = div;
-    this.centerBoardContainer();
+
     this.app.stage.addChild(this.boardContainer);
   }
 
@@ -30,8 +30,8 @@ export class BoardRenderService {
   }
 
   centerBoardContainer() {
-    this.boardContainer.x = this.app.screen.width / 5;
-    this.boardContainer.y = this.app.screen.height / 4;
+    this.boardContainer.x = this.div.clientWidth / 2;
+    this.boardContainer.y = this.div.clientHeight / 2;
   }
 
   onResize() {
@@ -105,13 +105,13 @@ export class BoardRenderService {
   private calculateNewPosition(deltaX: number, deltaY: number) {
     const newX = this.clamp(
       this.boardContainer.x + deltaX,
-      0,
-      this.div.clientWidth - this.boardContainer.width - 40
+      this.boardContainer.width / 2,
+      this.div.clientWidth - this.boardContainer.width / 2
     );
     const newY = this.clamp(
       this.boardContainer.y + deltaY,
-      this.boardContainer.height / 4,
-      this.div.clientHeight + 40 - this.boardContainer.height
+      this.boardContainer.height / 1.5,
+      this.div.clientHeight - this.boardContainer.height / 2
     );
 
     return { newX, newY };
