@@ -42,6 +42,14 @@ export class GameRenderService {
     return this.textures;
   }
 
+  getHexagonSize(): number {
+    return this.boardRenderService.getHexagonSize();
+  }
+
+  getBottomBarHeight(): number {
+    return this.uiRenderService.getBottomBarHeight();
+  }
+
   async init(div: HTMLElement): Promise<void> {
     await this.app.init({
       background: 'grey',
@@ -53,11 +61,11 @@ export class GameRenderService {
     this.createPanableBg();
     this.app.stage.addChild(this.bg);
 
-    this.boardRenderService.init(div);
+    this.boardRenderService.init(div, this.getBottomBarHeight());
+
     this.uiRenderService.init(div);
 
     await this.loadAssets();
-
     this.onResize();
   }
 

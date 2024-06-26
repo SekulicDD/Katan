@@ -1,37 +1,47 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Application, Container } from 'pixi.js';
 import { gsap } from 'gsap';
 import { PixiPlugin } from 'gsap/PixiPlugin';
+import { GameRenderService } from './game-render.service';
+import { UiRenderService } from './ui-render.service';
 @Injectable({
   providedIn: 'root',
 })
 export class BoardRenderService {
   private boardContainer: Container = new Container();
   private div!: HTMLElement;
-  private scale = 1;
-  private zoomSpeed = 0.07;
+  private scale = 1.2;
+  private zoomSpeed = 0.067;
   private isDragging: boolean = false;
   private previousX: number = 0;
   private previousY: number = 0;
+
+  private hexagonSize = 134;
+  private bottomBarHeight = 0;
 
   constructor(private app: Application) {
     gsap.registerPlugin(PixiPlugin);
     PixiPlugin.registerPIXI(app);
   }
 
-  init(div: HTMLElement) {
+  init(div: HTMLElement, bottomBarHeight: number) {
     this.div = div;
-
+    this.bottomBarHeight = bottomBarHeight;
     this.app.stage.addChild(this.boardContainer);
+    this.boardContainer.scale.set(this.scale);
   }
 
   getBoardContainer(): Container {
     return this.boardContainer;
   }
 
+  getHexagonSize(): number {
+    return this.hexagonSize;
+  }
+
   centerBoardContainer() {
     this.boardContainer.x = this.div.clientWidth / 2;
-    this.boardContainer.y = this.div.clientHeight / 2;
+    this.boardContainer.y = (this.div.clientHeight - this.bottomBarHeight) / 2;
   }
 
   onResize() {
@@ -47,7 +57,7 @@ export class BoardRenderService {
 
     const oldScale = this.scale;
     this.scale *= zoom;
-    this.scale = Math.max(1, Math.min(this.scale, 1.35));
+    this.scale = Math.max(1, Math.min(this.scale, 1.5));
 
     const mouseOffsetX = (event.x - this.boardContainer.x) / oldScale;
     const mouseOffsetY = (event.y - this.boardContainer.y) / oldScale;
@@ -80,6 +90,7 @@ export class BoardRenderService {
   onDragMove = (event: any) => {
     if (this.isDragging) {
       const { x, y } = event.data.global;
+
       this.moveBoard(x - this.previousX, y - this.previousY);
       this.previousX = x;
       this.previousY = y;
@@ -87,7 +98,7 @@ export class BoardRenderService {
   };
 
   private moveBoard(deltaX: number, deltaY: number) {
-    const speed = 18;
+    const speed = 20;
     const { newX, newY } = this.calculateNewPosition(
       deltaX * speed,
       deltaY * speed
@@ -110,8 +121,10 @@ export class BoardRenderService {
     );
     const newY = this.clamp(
       this.boardContainer.y + deltaY,
-      this.boardContainer.height / 1.5,
-      this.div.clientHeight - this.boardContainer.height / 2
+      this.boardContainer.height / 2,
+      this.div.clientHeight -
+        this.boardContainer.height / 2 -
+        this.bottomBarHeight
     );
 
     return { newX, newY };

@@ -7,11 +7,16 @@ import { Application, Container, Graphics } from 'pixi.js';
 export class UiRenderService {
   uiContainer: Container = new Container();
   div!: HTMLElement;
+  bottomBarHeight = 100;
 
   constructor(private app: Application) {}
 
   getUiContainer(): Container {
     return this.uiContainer;
+  }
+
+  getBottomBarHeight(): number {
+    return this.bottomBarHeight;
   }
 
   init(div: HTMLElement) {

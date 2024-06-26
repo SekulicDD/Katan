@@ -1,4 +1,10 @@
-import { Component, ElementRef, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  OnInit,
+} from '@angular/core';
 import {
   Application,
   BitmapText,
@@ -22,6 +28,7 @@ export class GameUiComponent implements OnInit {
   uiContainer: Container = this.gameRenderService.getUiContainer();
   textures: Record<string, Texture> = this.gameRenderService.getTextures();
   bottomBarContainer: Container = new Container();
+  bottomBarHeight = this.gameRenderService.getBottomBarHeight();
 
   @Input() div!: HTMLElement;
 
@@ -70,6 +77,10 @@ export class GameUiComponent implements OnInit {
     },
   ];
   ngOnInit(): void {
+    this.initComponent();
+  }
+
+  private initComponent() {
     this.drawBottomBar();
     this.drawCards(this.cards);
     this.drawTimer(24.0);
@@ -77,10 +88,10 @@ export class GameUiComponent implements OnInit {
 
   drawBottomBar() {
     this.bottomBarContainer.x = 0;
-    this.bottomBarContainer.y = this.div.clientHeight - 100;
+    this.bottomBarContainer.y = this.div.clientHeight - this.bottomBarHeight;
 
     const bar = new Graphics()
-      .rect(0, 0, this.div.clientWidth, 100)
+      .rect(0, 0, this.div.clientWidth, this.bottomBarHeight)
       .fill('black');
     bar.alpha = 0.3;
     this.bottomBarContainer.addChild(bar);
@@ -165,5 +176,11 @@ export class GameUiComponent implements OnInit {
     timerText.x = this.bottomBarContainer.width / 2 - textBounds.width / 2;
     timerText.y = this.bottomBarContainer.height / 2 - textBounds.height / 2;
     this.bottomBarContainer.addChild(timerText);
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event?: Event) {
+    this.bottomBarContainer.removeChildren();
+    this.initComponent();
   }
 }
