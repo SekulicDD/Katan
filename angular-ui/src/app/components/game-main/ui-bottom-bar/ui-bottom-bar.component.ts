@@ -17,13 +17,13 @@ import { GameRenderService } from '../../../services/game-render.service';
 import { Card } from '../../../types/cards.interface';
 
 @Component({
-  selector: 'app-game-ui',
+  selector: 'app-ui-bottom-bar',
   standalone: true,
   imports: [],
-  templateUrl: './game-ui.component.html',
-  styleUrl: './game-ui.component.scss',
+  templateUrl: './ui-bottom-bar.component.html',
+  styleUrl: './ui-bottom-bar.component.scss',
 })
-export class GameUiComponent implements OnInit {
+export class UiBottomBarComponent implements OnInit {
   app: Application = this.gameRenderService.getApp();
   uiContainer: Container = this.gameRenderService.getUiContainer();
   textures: Record<string, Texture> = this.gameRenderService.getTextures();

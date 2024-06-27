@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GameUiComponent } from './game-ui.component';
+import { UiPlayerInfoComponent } from './ui-player-info.component';
 
-describe('GameUiComponent', () => {
-  let component: GameUiComponent;
-  let fixture: ComponentFixture<GameUiComponent>;
+describe('UiPlayerInfoComponent', () => {
+  let component: UiPlayerInfoComponent;
+  let fixture: ComponentFixture<UiPlayerInfoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GameUiComponent]
+      imports: [UiPlayerInfoComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(GameUiComponent);
+    fixture = TestBed.createComponent(UiPlayerInfoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

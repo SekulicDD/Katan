@@ -5,12 +5,18 @@ import { GameBoardComponent } from './game-board/game-board.component';
 import { CommonModule } from '@angular/common';
 
 import { GameRenderService } from '../../services/game-render.service';
-import { GameUiComponent } from './game-ui/game-ui.component';
+import { UiBottomBarComponent } from './ui-bottom-bar/ui-bottom-bar.component';
+import { UiPlayerInfoComponent } from './ui-player-info/ui-player-info.component';
 
 @Component({
   selector: 'app-game-main',
   standalone: true,
-  imports: [GameBoardComponent, CommonModule, GameUiComponent],
+  imports: [
+    GameBoardComponent,
+    CommonModule,
+    UiBottomBarComponent,
+    UiPlayerInfoComponent,
+  ],
   templateUrl: './game-main.component.html',
   styleUrl: './game-main.component.scss',
 })

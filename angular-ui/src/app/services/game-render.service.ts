@@ -107,6 +107,13 @@ export class GameRenderService {
     Assets.add({ alias: 'oreCard', src: 'images/ore-card.jpg' });
     Assets.add({ alias: 'sheepCard', src: 'images/sheep-card.jpg' });
     Assets.add({ alias: 'wheatCard', src: 'images/wheat-card.jpg' });
+
+    Assets.add({ alias: 'avatar', src: 'images/avatar.png' });
+    Assets.add({ alias: 'trophy', src: 'images/trophy.png' });
+    Assets.add({ alias: 'army', src: 'images/army.png' });
+    Assets.add({ alias: 'longest-road', src: 'images/longest-road.png' });
+    Assets.add({ alias: 'card-dev', src: 'images/card-dev.png' });
+    Assets.add({ alias: 'card-resource', src: 'images/card-resource.png' });
     this.textures = await Assets.load([
       'brickField',
       'desertField',
@@ -120,6 +127,12 @@ export class GameRenderService {
       'oreCard',
       'sheepCard',
       'wheatCard',
+      'avatar',
+      'trophy',
+      'army',
+      'longest-road',
+      'card-dev',
+      'card-resource',
     ]);
   }
 

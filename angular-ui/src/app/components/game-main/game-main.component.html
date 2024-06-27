@@ -1,3 +1,4 @@
 <div #gameContainer class="w-full h-screen"></div>
 <app-game-board *ngIf="isLoaded" [div]="gameContainer"></app-game-board>
-<app-game-ui *ngIf="isLoaded" [div]="gameContainer"></app-game-ui>
+<app-ui-bottom-bar *ngIf="isLoaded" [div]="gameContainer"></app-ui-bottom-bar>
+<app-ui-player-info *ngIf="isLoaded"></app-ui-player-info>
