@@ -108,7 +108,7 @@ export class UiBottomBarComponent implements OnInit {
     const sprite = Sprite.from(this.textures[name + 'Card']);
 
     const aspectRatio = sprite.width / sprite.height;
-    sprite.height = 70;
+    sprite.height = 60;
     sprite.width = sprite.height * aspectRatio;
 
     sprite.x = x;
@@ -168,7 +168,7 @@ export class UiBottomBarComponent implements OnInit {
     const timerText = new BitmapText({
       text: time.toFixed(1) + 's',
       style: {
-        fontSize: 40,
+        fontSize: 30,
         align: 'center',
       },
     });

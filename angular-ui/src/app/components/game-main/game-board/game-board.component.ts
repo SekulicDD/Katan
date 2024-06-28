@@ -55,14 +55,14 @@ export class GameBoardComponent implements OnInit {
         let yHex = i * (hexHeight * 0.75);
         if (i % 2 == 1) xHex += hexWidth * 0.5;
 
-        const woodSprite = this.createWoodSprite(width, height);
-        woodSprite.x = xHex + hexWidth / 2;
-        woodSprite.y = yHex + hexHeight / 2;
-        this.boardContainer.addChild(woodSprite);
+        // const woodSprite = this.createWoodSprite(width, height);
+        // woodSprite.x = xHex + hexWidth / 2;
+        // woodSprite.y = yHex + hexHeight / 2;
+        // this.boardContainer.addChild(woodSprite);
 
         const hex = this.createHexagon(width, xHex, yHex);
         this.boardContainer.addChild(hex);
-        woodSprite.mask = hex;
+        //woodSprite.mask = hex;
 
         //hexagon image
         const woodGap = 14;
@@ -113,7 +113,7 @@ export class GameBoardComponent implements OnInit {
     const hexagonMask = new Graphics();
     const sideLen = size / 2;
     const vert = this.generateHexagonVertices(sideLen);
-    hexagonMask.poly(vert).fill('red');
+    hexagonMask.poly(vert).fill('grey');
     hexagonMask.stroke(1); //fixes gaps
     hexagonMask.x = x + hexagonMask.width / 2;
     hexagonMask.y = y + hexagonMask.height / 2;

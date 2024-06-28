@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
   Application,
   BitmapText,
@@ -23,6 +23,10 @@ export class UiPlayerInfoComponent implements OnInit {
   uiContainer: Container = this.gameRenderService.getUiContainer();
   textures: Record<string, Texture> = this.gameRenderService.getTextures();
   playerInfoContainer: Container = new Container();
+  @Input() div!: HTMLElement;
+
+  height: number = 80 * 2 + 15;
+  width: number = 580;
 
   constructor(private gameRenderService: GameRenderService) {}
 
@@ -31,96 +35,154 @@ export class UiPlayerInfoComponent implements OnInit {
   }
 
   private initComponent() {
-    this.drawPlayers();
+    this.playerInfoContainer.y =
+      this.div.clientHeight -
+      this.gameRenderService.getBottomBarHeight() -
+      this.height -
+      25;
+
+    this.playerInfoContainer.x = this.div.clientWidth - this.width - 25;
     this.uiContainer.addChild(this.playerInfoContainer);
+    this.drawPlayers();
   }
 
   private drawPlayers() {
-    const rect = new Graphics().rect(25, 25, 320, 380).fill('black');
-    rect.alpha = 0.3;
-
-    this.playerInfoContainer.addChild(rect);
-
     let playerSettings = {
       playerIndex: 0,
       color: new Color('red'),
       name: 'DonexX',
-      size: 45,
     };
-    this.drawPlayerInfo(playerSettings);
+
+    const width = 78;
+    const height = 82;
+
+    this.drawPlayerInfo(playerSettings, 0, 0, width, height);
     playerSettings.playerIndex = 1;
-    playerSettings.color = new Color('blue');
+    playerSettings.color = new Color('#1070FF');
     playerSettings.name = 'Wraith';
-    this.drawPlayerInfo(playerSettings);
+    this.drawPlayerInfo(playerSettings, width * 3.65 + 25, 0, width, height);
     playerSettings.playerIndex = 2;
-    playerSettings.color = new Color('grey');
+    playerSettings.color = new Color('#299E00');
     playerSettings.name = 'Seselj';
-    this.drawPlayerInfo(playerSettings);
+    this.drawPlayerInfo(playerSettings, 0, width + 15, width, height);
     playerSettings.playerIndex = 3;
-    playerSettings.color = new Color('green');
+    playerSettings.color = new Color('#AD00FF');
     playerSettings.name = 'SpaceBrown';
-    this.drawPlayerInfo(playerSettings);
+    this.drawPlayerInfo(
+      playerSettings,
+      width * 3.65 + 25,
+      width + 15,
+      width,
+      height
+    );
   }
 
-  private drawPlayerIcon(x: number, y: number, size: number, color: Color) {
-    const player = new Graphics().rect(x, y, size, size).fill(color);
+  private drawPlayerIcon(
+    x: number,
+    y: number,
+    player: playerSettings,
+    width: number,
+    height: number
+  ) {
+    const iconContainer = new Graphics()
+      .rect(x, y, width, height)
+      .fill('black');
+    iconContainer.alpha = 0.3;
+
     const avatar = Sprite.from(this.textures['avatar']);
-    avatar.width = size;
-    avatar.height = size;
-    player.addChild(avatar);
-    avatar.x = x;
-    avatar.y = y;
-    this.playerInfoContainer.addChild(player);
+    const avatarSize = width - 50;
+
+    avatar.width = avatarSize;
+    avatar.height = avatarSize;
+    avatar.tint = player.color;
+    avatar.anchor.set(0.5);
+    avatar.position.set(x + width / 2, y + height / 2 - 10);
+
+    const text = this.createText(x, y, width, 20, '3');
+    const textBounds = text.getLocalBounds();
+    text.position.set(x + width / 2 - textBounds.width / 2, y + height / 2 + 8);
+    this.playerInfoContainer.addChild(iconContainer, avatar, text);
+  }
+
+  private drawPlayerName(
+    x: number,
+    y: number,
+    player: playerSettings,
+    width: number,
+    height: number
+  ) {
+    const iconContainer = new Graphics()
+      .rect(x, y, width, height)
+      .fill('black');
+    iconContainer.alpha = 0.3;
+
+    const text = this.createText(x, y - height * 1.2, width, 18, player.name);
+
+    this.playerInfoContainer.addChild(iconContainer, text);
+  }
+
+  private drawPlayerInfo(
+    playerSettings: playerSettings,
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ) {
+    this.drawPlayerIcon(x, y, playerSettings, width, height);
+
+    const secondWindowX = x + width + 5;
+
+    this.drawPlayerName(secondWindowX, y, playerSettings, 188, height);
+
+    const iconSize = 22;
+    let iconX = secondWindowX + 20;
+
+    this.drawIcon('card-ico', iconX, y, iconSize, playerSettings.color, 3);
+    iconX += 40;
+    this.drawIcon('dev-card-ico', iconX, y, iconSize, playerSettings.color, 2);
+    iconX += 40;
+    this.drawIcon('knight-ico', iconX, y, iconSize, playerSettings.color, 1);
+    iconX += 40;
+    this.drawIcon('road-ico', iconX, y, iconSize, playerSettings.color, 6);
   }
 
   private drawIcon(
+    iconName: string,
     x: number,
     y: number,
     size: number,
-    postion: number,
-    icon: string,
-    count: number
+    color: Color,
+    value: number
   ) {
+    const sprite = Sprite.from(this.textures[iconName]);
+    sprite.width = size;
+    sprite.height = size;
+    sprite.tint = color;
+    sprite.x = x;
+    sprite.y = y + size * 1.4;
+
+    const text = this.createText(x, y + size * 1.6, size, 18, value.toString());
+
+    this.playerInfoContainer.addChild(sprite, text);
+  }
+
+  private createText(
+    x: number,
+    y: number,
+    size: number,
+    fontSize: number,
+    value: string
+  ): BitmapText {
     const text = new BitmapText({
-      text: count,
+      text: value,
       style: {
-        fontSize: 20,
+        fontSize: fontSize,
         align: 'center',
       },
     });
-    text.x = x + size * postion + text.width / 2 + 10;
-    text.y = y - 5;
-    this.playerInfoContainer.addChild(text);
-
-    const iconSprite = Sprite.from(this.textures[icon]);
-    iconSprite.width = size - 15;
-    iconSprite.height = size - 15;
-    iconSprite.x = x + size * postion + 5;
-    iconSprite.y = y + iconSprite.height / 2 + 5;
-    this.playerInfoContainer.addChild(iconSprite);
-  }
-
-  private drawPlayerInfo(playerSettings: playerSettings) {
-    const x = 65;
-    const y = 65 + playerSettings.playerIndex * 85;
-
-    this.drawPlayerIcon(x - 10, y, playerSettings.size, playerSettings.color);
-    this.drawIcon(x, y, playerSettings.size, 1, 'trophy', 1);
-    this.drawIcon(x, y, playerSettings.size, 2, 'army', 4);
-    this.drawIcon(x, y, playerSettings.size, 3, 'longest-road', 2);
-    this.drawIcon(x, y, playerSettings.size, 4, 'card-dev', 5);
-    this.drawIcon(x, y, playerSettings.size, 5, 'card-resource', 6);
-
-    // const nameText = new Text({
-    //   text: playerSettings.name,
-    //   style: {
-    //     fill: 'white',
-    //     fontSize: '20px',
-    //   },
-    // });
-    // nameText.x = 75 - (nameText.width - playerSettings.size) / 2;
-    // nameText.y = 55 + playerSettings.playerIndex * 100 + playerSettings.size;
-    // this.playerInfoContainer.addChild(nameText);
+    const textBounds = text.getLocalBounds();
+    text.position.set(x + size / 2 - textBounds.width / 2, y + size / 2 + 8);
+    return text;
   }
 }
 
@@ -128,5 +190,4 @@ interface playerSettings {
   playerIndex: number;
   color: Color;
   name: string;
-  size: number;
 }

@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { GameRenderService } from '../../services/game-render.service';
 import { UiBottomBarComponent } from './ui-bottom-bar/ui-bottom-bar.component';
 import { UiPlayerInfoComponent } from './ui-player-info/ui-player-info.component';
+import { UiTradeComponent } from './ui-trade/ui-trade.component';
 
 @Component({
   selector: 'app-game-main',
@@ -16,6 +17,7 @@ import { UiPlayerInfoComponent } from './ui-player-info/ui-player-info.component
     CommonModule,
     UiBottomBarComponent,
     UiPlayerInfoComponent,
+    UiTradeComponent,
   ],
   templateUrl: './game-main.component.html',
   styleUrl: './game-main.component.scss',

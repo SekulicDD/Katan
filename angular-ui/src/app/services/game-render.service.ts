@@ -114,6 +114,12 @@ export class GameRenderService {
     Assets.add({ alias: 'longest-road', src: 'images/longest-road.png' });
     Assets.add({ alias: 'card-dev', src: 'images/card-dev.png' });
     Assets.add({ alias: 'card-resource', src: 'images/card-resource.png' });
+
+    Assets.add({ alias: 'knight-ico', src: 'images/knight-ico.png' });
+    Assets.add({ alias: 'card-ico', src: 'images/card-ico.png' });
+    Assets.add({ alias: 'dev-card-ico', src: 'images/dev-card-ico.png' });
+    Assets.add({ alias: 'road-ico', src: 'images/road-ico.png' });
+
     this.textures = await Assets.load([
       'brickField',
       'desertField',
@@ -133,6 +139,10 @@ export class GameRenderService {
       'longest-road',
       'card-dev',
       'card-resource',
+      'knight-ico',
+      'card-ico',
+      'dev-card-ico',
+      'road-ico',
     ]);
   }
 

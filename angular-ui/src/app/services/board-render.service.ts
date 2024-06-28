@@ -10,7 +10,7 @@ import { UiRenderService } from './ui-render.service';
 export class BoardRenderService {
   private boardContainer: Container = new Container();
   private div!: HTMLElement;
-  private scale = 1.2;
+  private scale = 1.1;
   private zoomSpeed = 0.067;
   private isDragging: boolean = false;
   private previousX: number = 0;

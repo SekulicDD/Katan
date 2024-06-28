@@ -7,7 +7,7 @@ import { Application, Container, Graphics } from 'pixi.js';
 export class UiRenderService {
   uiContainer: Container = new Container();
   div!: HTMLElement;
-  bottomBarHeight = 100;
+  bottomBarHeight = 90;
 
   constructor(private app: Application) {}
 
