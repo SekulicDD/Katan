@@ -23,7 +23,7 @@ export class UiPlayerInfoComponent implements OnInit {
   uiContainer: Container = this.gameRenderService.getUiContainer();
   textures: Record<string, Texture> = this.gameRenderService.getTextures();
   playerInfoContainer: Container = new Container();
-  @Input() div!: HTMLElement;
+  div: HTMLElement = this.gameRenderService.getDiv();
 
   height: number = 80 * 2 + 15;
   width: number = 580;

@@ -22,7 +22,7 @@ export class GameBoardComponent implements OnInit {
   app: Application = this.gameRenderService.getApp();
   boardContainer: Container = this.gameRenderService.getBoardContainer();
   textures = this.gameRenderService.getTextures();
-  @Input() div!: HTMLElement;
+  div: HTMLElement = this.gameRenderService.getDiv();
 
   hexSize = this.gameRenderService.getHexagonSize();
   bottomBarHeight = this.gameRenderService.getBottomBarHeight();

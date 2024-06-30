@@ -18,6 +18,8 @@ export class GameRenderService {
   private textures: Record<string, Texture> = {};
   private bg!: Graphics;
 
+  private div!: HTMLElement;
+
   private boardRenderService!: BoardRenderService;
   private uiRenderService!: UiRenderService;
 
@@ -50,7 +52,12 @@ export class GameRenderService {
     return this.uiRenderService.getBottomBarHeight();
   }
 
+  getDiv(): HTMLElement {
+    return this.div;
+  }
+
   async init(div: HTMLElement): Promise<void> {
+    this.div = div;
     await this.app.init({
       background: 'grey',
       resizeTo: div,
@@ -93,57 +100,39 @@ export class GameRenderService {
   }
 
   private async loadAssets(): Promise<any> {
-    Assets.add({ alias: 'woodTexture', src: 'images/wood-texture1.png' });
+    const assetList: { alias: string; src: string }[] = [
+      { alias: 'woodTexture', src: 'images/wood-texture1.png' },
+      { alias: 'brickField', src: 'images/brick-field.png' },
+      { alias: 'desertField', src: 'images/desert-field.png' },
+      { alias: 'forestField', src: 'images/forest-field.png' },
+      { alias: 'rockField', src: 'images/rock-field.png' },
+      { alias: 'sheepField', src: 'images/sheep-field.png' },
+      { alias: 'wheatField', src: 'images/wheat-field.png' },
 
-    Assets.add({ alias: 'brickField', src: 'images/brick-field.png' });
-    Assets.add({ alias: 'desertField', src: 'images/desert-field.png' });
-    Assets.add({ alias: 'forestField', src: 'images/forest-field.png' });
-    Assets.add({ alias: 'rockField', src: 'images/rock-field.png' });
-    Assets.add({ alias: 'sheepField', src: 'images/sheep-field.png' });
-    Assets.add({ alias: 'wheatField', src: 'images/wheat-field.png' });
+      { alias: 'brickCard', src: 'images/brick-card.jpg' },
+      { alias: 'woodCard', src: 'images/wood-card.jpg' },
+      { alias: 'oreCard', src: 'images/ore-card.jpg' },
+      { alias: 'sheepCard', src: 'images/sheep-card.jpg' },
+      { alias: 'wheatCard', src: 'images/wheat-card.jpg' },
 
-    Assets.add({ alias: 'brickCard', src: 'images/brick-card.jpg' });
-    Assets.add({ alias: 'woodCard', src: 'images/wood-card.jpg' });
-    Assets.add({ alias: 'oreCard', src: 'images/ore-card.jpg' });
-    Assets.add({ alias: 'sheepCard', src: 'images/sheep-card.jpg' });
-    Assets.add({ alias: 'wheatCard', src: 'images/wheat-card.jpg' });
+      { alias: 'avatar', src: 'images/avatar.png' },
+      { alias: 'trophy', src: 'images/trophy.png' },
+      { alias: 'army', src: 'images/army.png' },
+      { alias: 'longest-road', src: 'images/longest-road.png' },
+      { alias: 'card-dev', src: 'images/card-dev.png' },
+      { alias: 'card-resource', src: 'images/card-resource.png' },
 
-    Assets.add({ alias: 'avatar', src: 'images/avatar.png' });
-    Assets.add({ alias: 'trophy', src: 'images/trophy.png' });
-    Assets.add({ alias: 'army', src: 'images/army.png' });
-    Assets.add({ alias: 'longest-road', src: 'images/longest-road.png' });
-    Assets.add({ alias: 'card-dev', src: 'images/card-dev.png' });
-    Assets.add({ alias: 'card-resource', src: 'images/card-resource.png' });
+      { alias: 'knight-ico', src: 'images/knight-ico.png' },
+      { alias: 'card-ico', src: 'images/card-ico.png' },
+      { alias: 'dev-card-ico', src: 'images/dev-card-ico.png' },
+      { alias: 'road-ico', src: 'images/road-ico.png' },
+    ];
 
-    Assets.add({ alias: 'knight-ico', src: 'images/knight-ico.png' });
-    Assets.add({ alias: 'card-ico', src: 'images/card-ico.png' });
-    Assets.add({ alias: 'dev-card-ico', src: 'images/dev-card-ico.png' });
-    Assets.add({ alias: 'road-ico', src: 'images/road-ico.png' });
+    for (const asset of assetList) {
+      Assets.add(asset);
+    }
 
-    this.textures = await Assets.load([
-      'brickField',
-      'desertField',
-      'forestField',
-      'rockField',
-      'sheepField',
-      'wheatField',
-      'woodTexture',
-      'brickCard',
-      'woodCard',
-      'oreCard',
-      'sheepCard',
-      'wheatCard',
-      'avatar',
-      'trophy',
-      'army',
-      'longest-road',
-      'card-dev',
-      'card-resource',
-      'knight-ico',
-      'card-ico',
-      'dev-card-ico',
-      'road-ico',
-    ]);
+    this.textures = await Assets.load(assetList.map((asset) => asset.alias));
   }
 
   @HostListener('window:resize', ['$event'])

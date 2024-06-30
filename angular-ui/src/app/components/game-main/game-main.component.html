@@ -1,5 +1,7 @@
 <div #gameContainer class="w-full h-screen"></div>
-<app-game-board *ngIf="isLoaded" [div]="gameContainer"></app-game-board>
-<app-ui-bottom-bar *ngIf="isLoaded" [div]="gameContainer"></app-ui-bottom-bar>
-<app-ui-player-info *ngIf="isLoaded" [div]="gameContainer"></app-ui-player-info>
-<!-- <app-ui-trade *ngIf="isLoaded" [div]="gameContainer"></app-ui-trade> -->
+<ng-container *ngIf="isLoaded">
+  <app-game-board></app-game-board>
+  <app-ui-bottom-bar></app-ui-bottom-bar>
+  <app-ui-player-info></app-ui-player-info>
+  <app-ui-trade></app-ui-trade>
+</ng-container>

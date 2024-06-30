@@ -30,7 +30,7 @@ export class UiBottomBarComponent implements OnInit {
   bottomBarContainer: Container = new Container();
   bottomBarHeight = this.gameRenderService.getBottomBarHeight();
 
-  @Input() div!: HTMLElement;
+  div: HTMLElement = this.gameRenderService.getDiv();
 
   constructor(private gameRenderService: GameRenderService) {}
 
