@@ -10,6 +10,7 @@ import {
 } from 'pixi.js';
 import { GameRenderService } from '../../../services/game-render.service';
 import { BoardRenderService } from '../../../services/board-render.service';
+import { AssetsManagerService } from '../../../services/assets-manager.service';
 
 @Component({
   selector: 'app-game-board',
@@ -21,13 +22,15 @@ import { BoardRenderService } from '../../../services/board-render.service';
 export class GameBoardComponent implements OnInit {
   app: Application = this.gameRenderService.getApp();
   boardContainer: Container = this.gameRenderService.getBoardContainer();
-  textures = this.gameRenderService.getTextures();
   div: HTMLElement = this.gameRenderService.getDiv();
 
   hexSize = this.gameRenderService.getHexagonSize();
   bottomBarHeight = this.gameRenderService.getBottomBarHeight();
 
-  constructor(private gameRenderService: GameRenderService) {}
+  constructor(
+    private gameRenderService: GameRenderService,
+    private assetService: AssetsManagerService
+  ) {}
 
   ngOnInit(): void {
     this.drawBoard(this.hexSize, this.hexSize);
@@ -90,7 +93,7 @@ export class GameBoardComponent implements OnInit {
   }
 
   private createWoodSprite(width: number, height: number): Sprite {
-    const sprite = Sprite.from(this.textures['woodTexture']);
+    const sprite = Sprite.from(this.assetService.getTexture('woodTexture'));
     sprite.width = width;
     sprite.height = height;
     sprite.anchor = 0.5;
@@ -136,7 +139,9 @@ export class GameBoardComponent implements OnInit {
       'wheatField',
     ];
     const sprite = Sprite.from(
-      this.textures[fields[Math.floor(Math.random() * fields.length)]]
+      this.assetService.getTexture(
+        fields[Math.floor(Math.random() * fields.length)]
+      )
     );
     sprite.width = width;
     sprite.height = height;

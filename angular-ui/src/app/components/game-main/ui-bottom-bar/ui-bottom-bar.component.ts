@@ -15,6 +15,7 @@ import {
 } from 'pixi.js';
 import { GameRenderService } from '../../../services/game-render.service';
 import { Card } from '../../../types/cards.interface';
+import { AssetsManagerService } from '../../../services/assets-manager.service';
 
 @Component({
   selector: 'app-ui-bottom-bar',
@@ -26,13 +27,15 @@ import { Card } from '../../../types/cards.interface';
 export class UiBottomBarComponent implements OnInit {
   app: Application = this.gameRenderService.getApp();
   uiContainer: Container = this.gameRenderService.getUiContainer();
-  textures: Record<string, Texture> = this.gameRenderService.getTextures();
   bottomBarContainer: Container = new Container();
   bottomBarHeight = this.gameRenderService.getBottomBarHeight();
 
   div: HTMLElement = this.gameRenderService.getDiv();
 
-  constructor(private gameRenderService: GameRenderService) {}
+  constructor(
+    private gameRenderService: GameRenderService,
+    private assetService: AssetsManagerService
+  ) {}
 
   cards: Card[] = [
     {
@@ -105,7 +108,7 @@ export class UiBottomBarComponent implements OnInit {
     y: number = 15,
     opacity: number = 1
   ): Sprite {
-    const sprite = Sprite.from(this.textures[name + 'Card']);
+    const sprite = Sprite.from(this.assetService.getTexture(name + 'Card'));
 
     const aspectRatio = sprite.width / sprite.height;
     sprite.height = 60;

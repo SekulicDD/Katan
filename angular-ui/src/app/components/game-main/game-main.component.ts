@@ -8,6 +8,7 @@ import { GameRenderService } from '../../services/game-render.service';
 import { UiBottomBarComponent } from './ui-bottom-bar/ui-bottom-bar.component';
 import { UiPlayerInfoComponent } from './ui-player-info/ui-player-info.component';
 import { UiTradeComponent } from './ui-trade/ui-trade.component';
+import { AssetsManagerService } from '../../services/assets-manager.service';
 
 @Component({
   selector: 'app-game-main',
@@ -28,13 +29,20 @@ export class GameMainComponent {
 
   @ViewChild('gameContainer', { static: true }) gameContainer?: ElementRef;
 
-  constructor(private gameRenderService: GameRenderService) {}
+  constructor(
+    private gameRenderService: GameRenderService,
+    private assetService: AssetsManagerService
+  ) {}
 
   ngOnInit(): void {
-    this.gameRenderService.init(this.gameContainer?.nativeElement).then(() => {
-      this.app = this.gameRenderService.getApp();
-      this.isLoaded = true;
-    });
+    this.loadGame();
+  }
+
+  private async loadGame() {
+    await this.gameRenderService.init(this.gameContainer?.nativeElement);
+    this.app = this.gameRenderService.getApp();
+    await this.assetService.loadAssets();
+    this.isLoaded = true;
   }
 
   @HostListener('window:resize', ['$event'])

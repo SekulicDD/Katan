@@ -10,6 +10,7 @@ import {
   Texture,
 } from 'pixi.js';
 import { GameRenderService } from '../../../services/game-render.service';
+import { AssetsManagerService } from '../../../services/assets-manager.service';
 
 @Component({
   selector: 'app-ui-player-info',
@@ -21,14 +22,16 @@ import { GameRenderService } from '../../../services/game-render.service';
 export class UiPlayerInfoComponent implements OnInit {
   app: Application = this.gameRenderService.getApp();
   uiContainer: Container = this.gameRenderService.getUiContainer();
-  textures: Record<string, Texture> = this.gameRenderService.getTextures();
   playerInfoContainer: Container = new Container();
   div: HTMLElement = this.gameRenderService.getDiv();
 
   height: number = 80 * 2 + 15;
   width: number = 580;
 
-  constructor(private gameRenderService: GameRenderService) {}
+  constructor(
+    private gameRenderService: GameRenderService,
+    private assetService: AssetsManagerService
+  ) {}
 
   ngOnInit(): void {
     this.initComponent();
@@ -89,7 +92,7 @@ export class UiPlayerInfoComponent implements OnInit {
       .fill('black');
     iconContainer.alpha = 0.3;
 
-    const avatar = Sprite.from(this.textures['avatar']);
+    const avatar = Sprite.from(this.assetService.getTexture('avatar'));
     const avatarSize = width - 50;
 
     avatar.width = avatarSize;
@@ -154,7 +157,7 @@ export class UiPlayerInfoComponent implements OnInit {
     color: Color,
     value: number
   ) {
-    const sprite = Sprite.from(this.textures[iconName]);
+    const sprite = Sprite.from(this.assetService.getTexture(iconName));
     sprite.width = size;
     sprite.height = size;
     sprite.tint = color;
