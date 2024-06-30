@@ -1,21 +1,8 @@
-import {
-  Component,
-  ElementRef,
-  HostListener,
-  Input,
-  OnInit,
-} from '@angular/core';
-import {
-  Application,
-  BitmapText,
-  Container,
-  Graphics,
-  Sprite,
-  Texture,
-} from 'pixi.js';
+import { Component, HostListener, OnInit } from '@angular/core';
+import { Application, BitmapText, Container, Graphics, Sprite } from 'pixi.js';
 import { GameRenderService } from '../../../services/game-render.service';
 import { Card } from '../../../types/cards.interface';
-import { AssetsManagerService } from '../../../services/assets-manager.service';
+import { CardRenderService } from '../../../services/card-render.service';
 
 @Component({
   selector: 'app-ui-bottom-bar',
@@ -34,7 +21,7 @@ export class UiBottomBarComponent implements OnInit {
 
   constructor(
     private gameRenderService: GameRenderService,
-    private assetService: AssetsManagerService
+    private cardRenderService: CardRenderService
   ) {}
 
   cards: Card[] = [
@@ -85,7 +72,12 @@ export class UiBottomBarComponent implements OnInit {
 
   private initComponent() {
     this.drawBottomBar();
-    this.drawCards(this.cards);
+    this.cardRenderService.drawCards(
+      this.cards,
+      35,
+      20,
+      this.bottomBarContainer
+    );
     this.drawTimer(24.0);
   }
 
@@ -99,72 +91,6 @@ export class UiBottomBarComponent implements OnInit {
     bar.alpha = 0.3;
     this.bottomBarContainer.addChild(bar);
     this.uiContainer.addChild(this.bottomBarContainer);
-  }
-
-  //make stack up to 4 cards with y+=3 opacity=0.4
-  getCardSprite(
-    name: string,
-    x: number,
-    y: number = 15,
-    opacity: number = 1
-  ): Sprite {
-    const sprite = Sprite.from(this.assetService.getTexture(name + 'Card'));
-
-    const aspectRatio = sprite.width / sprite.height;
-    sprite.height = 60;
-    sprite.width = sprite.height * aspectRatio;
-
-    sprite.x = x;
-    sprite.y = y;
-    sprite.alpha = opacity;
-    return sprite;
-  }
-
-  drawCardCountSprite(count: number, x: number, y: number) {
-    const circle = new Graphics().circle(x, y, 14).fill('#1F2937');
-
-    const countText = new BitmapText({
-      text: count.toString(),
-      style: {
-        fontSize: 20,
-        align: 'center',
-      },
-    });
-    const textBounds = countText.getLocalBounds();
-    countText.x = x - textBounds.width / 2;
-    countText.y = y - textBounds.height / 2;
-
-    this.bottomBarContainer.addChild(circle);
-    this.bottomBarContainer.addChild(countText);
-  }
-
-  generateCardSpriteStack(name: string, stackSize: number, x: number = 50) {
-    let sprites = [];
-
-    let startY = 20;
-
-    for (let i = 0; i < stackSize && i < 4; i++) {
-      let opacity = 0.4;
-      if (i == stackSize - 1 || i == 3) opacity = 1;
-      sprites.push(this.getCardSprite(name, x, startY, opacity));
-      startY -= 3;
-    }
-    return sprites;
-  }
-
-  drawCards(cards: Card[]) {
-    let startX = 50;
-    cards.forEach((card, index, arr) => {
-      if (card.type == 'development' && arr[index - 1].type == 'resource')
-        startX += 35;
-      let sprites = this.generateCardSpriteStack(card.name, card.count, startX);
-      while (sprites.length > 0) {
-        const sprite = sprites.shift() as Sprite;
-        this.bottomBarContainer.addChild(sprite);
-      }
-      this.drawCardCountSprite(card.count, startX, 20);
-      startX += 70;
-    });
   }
 
   drawTimer(time: number) {

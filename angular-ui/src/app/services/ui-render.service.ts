@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Application, Container, Graphics, Sprite, Texture } from 'pixi.js';
+import { AssetsManagerService } from './assets-manager.service';
 
 @Injectable({
   providedIn: 'root',
