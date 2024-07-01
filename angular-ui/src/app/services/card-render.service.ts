@@ -9,6 +9,8 @@ import { AssetsManagerService } from './assets-manager.service';
 export class CardRenderService {
   constructor(private assetService: AssetsManagerService) {}
 
+  private aspectRatio: number = 0.714;
+
   private drawCardCountSprite(
     count: number,
     x: number,
@@ -30,6 +32,7 @@ export class CardRenderService {
 
     container.addChild(circle);
     container.addChild(countText);
+    return countText;
   }
 
   getCardSprite(
@@ -39,11 +42,8 @@ export class CardRenderService {
     opacity: number = 1
   ): Sprite {
     const sprite = Sprite.from(this.assetService.getTexture(name + 'Card'));
-
-    const aspectRatio = sprite.width / sprite.height;
     sprite.height = 60;
-    sprite.width = sprite.height * aspectRatio;
-
+    sprite.width = sprite.height * this.aspectRatio;
     sprite.x = x;
     sprite.y = y;
     sprite.alpha = opacity;
@@ -67,13 +67,16 @@ export class CardRenderService {
     return sprites;
   }
 
-  drawCards(
+  drawCardStacks(
     cards: Card[],
     startX: number,
     startY: number,
     container: Container
-  ) {
+  ): [Sprite, BitmapText] {
     let x = startX;
+    let counter: any;
+    let sprite;
+
     cards.forEach((card, index, arr) => {
       if (card.type == 'development' && arr[index - 1].type == 'resource')
         x += 35;
@@ -84,11 +87,51 @@ export class CardRenderService {
         startY
       );
       while (sprites.length > 0) {
-        const sprite = sprites.shift() as Sprite;
+        sprite = sprites.shift() as Sprite;
         container.addChild(sprite);
       }
-      this.drawCardCountSprite(card.count, x, 20, container);
+      counter = this.drawCardCountSprite(card.count, x, startY, container);
       x += 70;
     });
+    return [sprite!, counter];
+  }
+
+  drawOneCard(
+    name: string,
+    x: number,
+    y: number = 15,
+    container: Container
+  ): Sprite {
+    const sprite = Sprite.from(this.assetService.getTexture(name + 'Card'));
+    sprite.height = 60;
+    sprite.width = sprite.height * this.aspectRatio;
+    sprite.x = x;
+    sprite.y = y;
+
+    container.addChild(sprite);
+    return sprite;
+  }
+
+  drawEmptyCards(
+    x: number,
+    y: number,
+    height: number,
+    count: number,
+    container: Container
+  ): any[] {
+    let res = [];
+    const width = height * this.aspectRatio;
+    let startX = x;
+    for (let i = 0; i < count; i++) {
+      const rect = new Graphics().rect(0, 0, width, height).fill('#292E38');
+      rect.x = startX;
+      rect.y = y;
+
+      container.addChild(rect);
+      res.push(rect);
+      startX += 25 + width;
+    }
+
+    return res;
   }
 }

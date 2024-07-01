@@ -36,6 +36,9 @@ export class AssetsManagerService {
       { alias: 'card-ico', src: 'images/card-ico.png' },
       { alias: 'dev-card-ico', src: 'images/dev-card-ico.png' },
       { alias: 'road-ico', src: 'images/road-ico.png' },
+
+      { alias: 'arrow-up', src: 'images/arrow-up-ico.png' },
+      { alias: 'arrow-down', src: 'images/arrow-down-ico.png' },
     ];
 
     for (const asset of assetList) {

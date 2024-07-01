@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import {
   Application,
   BitmapText,
@@ -186,6 +186,12 @@ export class UiPlayerInfoComponent implements OnInit {
     const textBounds = text.getLocalBounds();
     text.position.set(x + size / 2 - textBounds.width / 2, y + size / 2 + 8);
     return text;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event?: Event) {
+    this.playerInfoContainer.removeChildren();
+    this.initComponent();
   }
 }
 

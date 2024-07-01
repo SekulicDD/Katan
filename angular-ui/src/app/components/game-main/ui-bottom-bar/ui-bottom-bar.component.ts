@@ -72,7 +72,7 @@ export class UiBottomBarComponent implements OnInit {
 
   private initComponent() {
     this.drawBottomBar();
-    this.cardRenderService.drawCards(
+    this.cardRenderService.drawCardStacks(
       this.cards,
       35,
       20,
